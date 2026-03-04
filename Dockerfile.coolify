@@ -1,0 +1,17 @@
+FROM node:20-alpine
+
+WORKDIR /home/app
+
+COPY package*.json ./
+
+RUN npm ci
+
+COPY . .
+
+RUN npm run build
+
+COPY ./src/storage/emailTemplates ./build/storage/emailTemplates
+
+EXPOSE 3000
+
+CMD ["node", "-r", "dotenv/config", "build/server.js"]
