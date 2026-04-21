@@ -53,6 +53,7 @@ function logEmailSendSuccess(context: string, result: any) {
         response: result?.response,
         messageId: result?.messageId,
         envelope: result?.envelope,
+        rawResult: result,
     });
 }
 
