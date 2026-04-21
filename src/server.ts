@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import env from "./util/validateEnv";
 import app from "./app";
-import 'dotenv/config';
 import { verifyEmailTransport } from "./util/emailSender.util";
 
 const port = process.env.PORT ? Number(process.env.PORT) : 3000;
