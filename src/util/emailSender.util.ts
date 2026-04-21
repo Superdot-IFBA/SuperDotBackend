@@ -75,7 +75,20 @@ async function sendTemplatedEmail(
     payload: Parameters<typeof email.send>[0]
 ) {
     try {
-        const result = await email.send(payload);
+        const safePayload = payload as NonNullable<typeof payload>;
+        const emailInstance = email as any;
+        const baseMessage = {
+            ...emailInstance.config.message,
+            ...safePayload.message,
+            attachments: safePayload.message?.attachments ?? emailInstance.config.message?.attachments,
+        };
+        const renderedMessage = await emailInstance.renderAll(
+            safePayload.template,
+            safePayload.locals ?? {},
+            baseMessage
+        );
+        const result: any = await transport.sendMail(renderedMessage);
+        result.originalMessage = renderedMessage;
         logEmailSendSuccess(context, result);
         return result;
     } catch (error) {
