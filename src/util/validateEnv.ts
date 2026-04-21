@@ -27,12 +27,12 @@ export default cleanEnv(process.env, {
         default: "production" // Default seguro para ambiente de produção
     }),
 
-    // Variáveis de e-mail (opcionais - usar devDefault localmente)
+    // Em produção preferimos SMTP explícito em vez de depender de presets do provider.
 
     EMAIL_USER: str({ default: isProduction ? undefined : "" }),
     EMAIL_PASS: str({ default: isProduction ? undefined : "" }),
     EMAIL_SERVICE: str({ default: "gmail" }),
-    EMAIL_HOST: str({ default: "" }),
+    EMAIL_HOST: str({ default: isProduction ? "smtp.gmail.com" : "" }),
     EMAIL_PORT: num({ default: 465 }),
     EMAIL_SECURE: str({
         choices: ["true", "false"],

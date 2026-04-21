@@ -6,8 +6,9 @@ import { RolesType, SampleStatus } from "./consts";
 
 const templatesPath = path.join(__dirname, "../storage/emailTemplates");
 const emailSecure = env.EMAIL_SECURE === "true";
+const useExplicitSmtp = Boolean(env.EMAIL_HOST);
 
-const transportConfig = env.EMAIL_HOST
+const transportConfig = useExplicitSmtp
     ? {
         host: env.EMAIL_HOST,
         port: env.EMAIL_PORT,
@@ -84,10 +85,11 @@ export async function verifyEmailTransport() {
     try {
         const result = await transport.verify();
         console.info("[email] transport verified", {
-            service: env.EMAIL_HOST ? undefined : env.EMAIL_SERVICE,
-            host: env.EMAIL_HOST || undefined,
-            port: env.EMAIL_HOST ? env.EMAIL_PORT : undefined,
-            secure: env.EMAIL_HOST ? emailSecure : undefined,
+            mode: useExplicitSmtp ? "smtp" : "service",
+            service: useExplicitSmtp ? undefined : env.EMAIL_SERVICE,
+            host: useExplicitSmtp ? env.EMAIL_HOST : undefined,
+            port: useExplicitSmtp ? env.EMAIL_PORT : undefined,
+            secure: useExplicitSmtp ? emailSecure : undefined,
             user: env.EMAIL_USER,
             verified: result,
         });
