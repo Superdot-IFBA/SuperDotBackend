@@ -29,6 +29,8 @@ const transportConfig = useExplicitSmtp
 const transport = nodemailer.createTransport(transportConfig);
 
 const email = new Email({
+    send: true,
+    preview: false,
     views: {
         root: templatesPath,
         options: {
